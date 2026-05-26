@@ -16,6 +16,6 @@ services:
       - key: GOOGLE_GENAI_API_KEY
         sync: false
       - key: FRONTEND_URL
-        sync: false
+        value: https://joydeep-interview-ai.netlify.app
       - key: ALLOWED_ORIGINS
-        sync: false
+        value: https://joydeep-interview-ai.netlify.app

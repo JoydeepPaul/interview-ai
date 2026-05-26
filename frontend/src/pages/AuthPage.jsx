@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { authService } from '../services/api'
+import { useAuth } from '../hooks'
 import '../styles/AuthPage.css'
 
-function AuthPage({ setToken }) {
+function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
   const [formData, setFormData] = useState({
     username: '',
@@ -11,6 +13,8 @@ function AuthPage({ setToken }) {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -25,12 +29,12 @@ function AuthPage({ setToken }) {
     setLoading(true)
 
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
-      const response = await axios.post(endpoint, formData)
+      const endpoint = isLogin ? authService.login : authService.register
+      const response = await endpoint(formData)
       
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token)
-        setToken(response.data.token)
+        login(response.data.token)
+        navigate('/dashboard')
       }
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred')
