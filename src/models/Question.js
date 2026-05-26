@@ -37,10 +37,6 @@ const QuestionSchema = new mongoose.Schema(
     exampleCode: String,
     followUpQuestion: String,
     tags: [String],
-    difficulty: {
-      type: String,
-      enum: ['Easy', 'Medium', 'Hard']
-    },
     estimatedTime: {
       type: Number,
       default: 300 // in seconds (5 minutes)
