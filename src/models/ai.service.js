@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 // Generate questions based on topic and difficulty
 export const generateQuestions = async (topic, difficulty, count = 10) => {
