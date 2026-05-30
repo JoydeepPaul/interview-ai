@@ -1,8 +1,12 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../hooks'
+import { authService, getErrorMessage } from '../services/api'
 import '../styles/AuthPage.css'
 
-function AuthPage({ setToken }) {
+function AuthPage() {
+  const navigate = useNavigate()
+  const { login, setCurrentUser } = useAuth()
   const [isLogin, setIsLogin] = useState(true)
   const [formData, setFormData] = useState({
     username: '',
@@ -25,15 +29,19 @@ function AuthPage({ setToken }) {
     setLoading(true)
 
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
-      const response = await axios.post(endpoint, formData)
+      const response = isLogin 
+        ? await authService.login({ email: formData.email, password: formData.password })
+        : await authService.register(formData)
       
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token)
-        setToken(response.data.token)
+      if (response.data?.token) {
+        login(response.data.token)
+        if (response.data.user) {
+          setCurrentUser(response.data.user)
+        }
+        navigate('/dashboard')
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred')
+      setError(getErrorMessage(err))
     } finally {
       setLoading(false)
     }
